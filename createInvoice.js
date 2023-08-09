@@ -3,6 +3,14 @@ const PDFDocument = require('pdfkit');
 var generateTablemid = require('./generateTablemid.js');
 var generateTable = require('./generateTable.js');
 var addWatermarkToPDF = require('./addWatermarkToPDF.js');
+var generateTableLast = require('./generateTableLast.js');
+var convertRupeesIntoWords = require('convert-rupees-into-words');
+
+
+var output = convertRupeesIntoWords(35116);
+
+console.log(output);
+
 
 
 
@@ -29,7 +37,7 @@ async function generateHeader(doc) {
         .text('www.jssaten.ac.in', { align : 'center'})
         .moveDown()
 
-    drawLine(doc, 100, 160, 500, 160);
+    drawLine(doc, 50, 160, 545, 160);
     
     
     doc.font('./files/cambria/cambriab.ttf')
@@ -37,13 +45,32 @@ async function generateHeader(doc) {
     .text('Salary Slip  (Feb 2017)', { align : 'center'})
     .fontSize(12.8)
     
-    drawLine(doc, 100, 175, 500, 175); 
+    drawLine(doc, 50, 175, 545, 175); 
 		
 }
+function drawLine(doc, startX, startY, endX, endY) {
+  return new Promise((resolve, reject) => {
+    doc.moveTo(startX, startY)
+      .lineTo(endX, endY)
+      .stroke();
+    resolve();
+  });
+}
 
+function printText(doc, font, text, startY, fontSize = 10.3, ) {
+  const textX = 50;
+  const textY = startY + 50;
+  if(startY == 438)
+  text = "(" + text + ")"; 
+
+  doc
+    .font(font)
+    .fontSize(fontSize)
+    .text(text, textX, textY, { width: 595 - 100, align: 'left', lineGap: 0 });
+}
 
   
-  function createInvoice(invoice, path) {
+  function createInvoice(path) {
       let doc = new PDFDocument({ size: 'A4' });
       const watermarkImagePath = './files/watermark.png';
       addWatermarkToPDF(doc, watermarkImagePath, doc.page.width, doc.page.height);
@@ -53,6 +80,16 @@ async function generateHeader(doc) {
       generateHeader(doc); // Invoke `generateHeader` function.
       generateTable(doc);
       generateTablemid(doc);
+      generateTableLast(doc);
+
+      drawLine(doc, 50, 487, 545, 487); 
+
+      printText(doc, './files/cambria/cambria.ttf', convertRupeesIntoWords(58439), 438);
+      var lowerText = "This is a computer generated salary slip and does not require any signature, in case of any discrepancy please contact Admin department.";
+
+      printText(doc, './files/cambria/cambriab.ttf', lowerText, 449);
+
+      
 
     // // Call the function to add the watermark
 

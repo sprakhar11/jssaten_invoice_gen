@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "convert-rupees-into-words": "^1.0.6",
+    "nodemon": "^3.0.1",
     "pdfkit": "^0.13.0",
     "xlsx": "^0.18.5"
   }

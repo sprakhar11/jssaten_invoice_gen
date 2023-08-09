@@ -21,7 +21,7 @@ const data = [
 
 function generateTablemid(doc, pageWidth = 595, startY = 240) {
     const cellWidth = (pageWidth - 100) / 3; // Calculate cell width to fit 3 cells with 50-pixel margin
-    const cellHeight = 18;
+    const cellHeight = 15;
     const tableX = 50;
     const tableY = startY;
   
@@ -39,7 +39,7 @@ function generateTablemid(doc, pageWidth = 595, startY = 240) {
           .font(font)
           .fontSize(10.3)
           .fillColor(color)
-          .text(value, cellX + 5, cellY + 5, { width: cellWidth - 10, align: 'left', lineGap: 5 });
+          .text(value, cellX + 5, cellY - 1, { width: cellWidth - 10, align: 'left', lineGap: 5 });
   
           if(row == 6 || row == 10 || row == 11){
            
