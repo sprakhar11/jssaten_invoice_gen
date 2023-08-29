@@ -1,9 +1,6 @@
 
 
-const data = [
-  ['Present', 'Absent', 'Week Of', 'HL', 'Paid Leave', 'Unpaid Leave', 'Working Days'],
-  ['22', '0', '4', '2', '0.00', '0.00', '28.00'],
-];
+
 
 // Define custom font and color settings for each row
 const cellConfig = [
@@ -19,11 +16,15 @@ const pageHeight = 842;
 const startY = 438;
 
 
-function generateTableLast(doc) {
+function generateTableLast(doc, pData) {
     const cellWidth = (pageWidth - 100) / 7 - 20; // Calculate cell width to fit 7 cells with 50-pixel margin
     const cellHeight = 18;
     const tableX = 50;
     const tableY = startY;
+    const data = [
+      ['Present', 'Absent', 'Week Of', 'HL', 'Paid Leave', 'Unpaid Leave', 'Working Days'],
+      [pData['Present'], pData['Absent'], pData['Week Of'], pData['HL'], pData['Paid Leave'], pData['Unpaid Leave'], pData['Working Days']],
+    ];
   
     for (let row = 0; row < data.length; row++) {
       for (let col = 0; col < data[row].length; col++) {

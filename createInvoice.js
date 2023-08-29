@@ -7,9 +7,9 @@ var generateTableLast = require('./generateTableLast.js');
 var convertRupeesIntoWords = require('convert-rupees-into-words');
 
 
-var output = convertRupeesIntoWords(35116);
+// var output = convertRupeesIntoWords(35116);
 
-console.log(output);
+// console.log(output);
 
 
 
@@ -39,14 +39,30 @@ async function generateHeader(doc) {
 
     drawLine(doc, 50, 160, 545, 160);
     
-    
-    doc.font('./files/cambria/cambriab.ttf')
-    .fillColor('#444444')
-    .text('Salary Slip  (Feb 2017)', { align : 'center'})
-    .fontSize(12.8)
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    var date = new Date();
+    var month = date.getMonth(); // returns 0 - 11
+
+    var year = date.getFullYear();
+
+    // console.log(months[month]);
+
+    // console.log(year);
+
+    month -= 1;
+    if(month == - 1){
+      month = 11;
+      year -= 1;
+    }
+
+    var headertext = 'Salary Slip  (' + months[month] + ' ' + year + ')';
+        doc.font('./files/cambria/cambriab.ttf')
+        .fillColor('#444444')
+        .text(headertext, { align : 'center'})
+        .fontSize(12.8)
     
     drawLine(doc, 50, 175, 545, 175); 
-		
 }
 function drawLine(doc, startX, startY, endX, endY) {
   return new Promise((resolve, reject) => {
@@ -69,33 +85,80 @@ function printText(doc, font, text, startY, fontSize = 10.3, ) {
     .text(text, textX, textY, { width: 595 - 100, align: 'left', lineGap: 0 });
 }
 
-  
-  function createInvoice(path) {
-      let doc = new PDFDocument({ size: 'A4' });
-      const watermarkImagePath = './files/watermark.png';
-      addWatermarkToPDF(doc, watermarkImagePath, doc.page.width, doc.page.height);
-      doc.page.width = 595;
-      doc.page.height = 842;
-      
-      generateHeader(doc); // Invoke `generateHeader` function.
-      generateTable(doc);
-      generateTablemid(doc);
-      generateTableLast(doc);
+function createInvoice(path, pData) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument();
+    const stream = fs.createWriteStream(path);
 
-      drawLine(doc, 50, 487, 545, 487); 
+    doc.pipe(stream);
 
-      printText(doc, './files/cambria/cambria.ttf', convertRupeesIntoWords(58439), 438);
-      var lowerText = "This is a computer generated salary slip and does not require any signature, in case of any discrepancy please contact Admin department.";
+    const watermarkImagePath = './files/watermark.png';
+    addWatermarkToPDF(doc, watermarkImagePath, doc.page.width, doc.page.height);
+    doc.page.width = 595;
+    doc.page.height = 842;
+    
+    generateHeader(doc); // Invoke `generateHeader` function.
+    generateTable(doc, pData);
+    generateTablemid(doc, pData);
+    // generateTableLast(doc, pData);
 
-      printText(doc, './files/cambria/cambriab.ttf', lowerText, 449);
+    drawLine(doc, 50, 450, 545, 450); 
+    let amount = pData['Net payable'].substring(1);
+    const originalString = amount;
+    const charactersToRemove = [',', ' '];
 
-      
+    const filteredArray = Array.from(originalString).filter(char => !charactersToRemove.includes(char));
+    const filteredString = filteredArray.join('');
+    const tmp = parseFloat(filteredString); 
 
-    // // Call the function to add the watermark
+
+    console.log(tmp)
+    printText(doc, './files/cambria/cambria.ttf', convertRupeesIntoWords(tmp), 400);
+    var lowerText = "This is a computer generated salary slip and does not require any signature.";
+
+    printText(doc, './files/cambria/cambriab.ttf', lowerText, 420);
+
 
     doc.end();
-    doc.pipe(fs.createWriteStream(path));
+
+    stream.on('finish', () => {
+      console.log(`${path} generated successfully.`);
+      resolve();
+    });
+
+    stream.on('error', (error) => {
+      console.error(`Error generating ${path}: ${error}`);
+      reject(error);
+    });
+  });
 }
+
+//   function createInvoice(path, pData) {
+//       let doc = new PDFDocument({ size: 'A4' });
+//       const watermarkImagePath = './files/watermark.png';
+//       addWatermarkToPDF(doc, watermarkImagePath, doc.page.width, doc.page.height);
+//       doc.page.width = 595;
+//       doc.page.height = 842;
+      
+//       generateHeader(doc); // Invoke `generateHeader` function.
+//       generateTable(doc, pData);
+//       generateTablemid(doc);
+//       generateTableLast(doc);
+
+//       drawLine(doc, 50, 487, 545, 487); 
+
+//       printText(doc, './files/cambria/cambria.ttf', convertRupeesIntoWords(58439), 438);
+//       var lowerText = "This is a computer generated salary slip and does not require any signature, in case of any discrepancy please contact Admin department.";
+
+//       printText(doc, './files/cambria/cambriab.ttf', lowerText, 449);
+
+      
+
+//     // // Call the function to add the watermark
+
+//     doc.end();
+//     doc.pipe(fs.createWriteStream(path));
+// }
 
 module.exports = {
     createInvoice,
