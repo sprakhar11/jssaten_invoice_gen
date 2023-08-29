@@ -46,19 +46,24 @@ const port = 3000;
 
     }
     var dirPath = './';
-    createfolder(dirPath, 'output');
-    dirPath = './output';
+    createfolder(dirPath, 'output')
+    .then( () => {
+        dirPath = './output';
+    
+        const folderName = year + '';
+    
+        createfolder(dirPath, folderName);
+    }).then( () => {
+        dirPath = dirPath + '/' + year;
+        createfolder(dirPath, months[month]);
 
-    const folderName = year + '';
+    }).then( () => {
+        dirPath = dirPath + '/' + months[month];
+        createfolder(dirPath, "Sheet");
+    }).then( ()=> {
+        createfolder(dirPath, "Generated Invoice");
+    })
 
-    createfolder(dirPath, folderName);
-
-    dirPath = dirPath + '/' + year;
-
-    createfolder(dirPath, months[month]);
-    dirPath = dirPath + '/' + months[month];
-    createfolder(dirPath, "Sheet");
-    createfolder(dirPath, "Generated Invoice");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
