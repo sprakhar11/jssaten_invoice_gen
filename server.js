@@ -45,7 +45,10 @@ const port = 3000;
     year -= 1;
 
     }
-    var dirPath = './output';
+    var dirPath = './';
+    createfolder(dirPath, 'output');
+    dirPath = './output';
+
     const folderName = year + '';
 
     createfolder(dirPath, folderName);
