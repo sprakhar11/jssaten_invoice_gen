@@ -15,7 +15,7 @@ function generateTable(doc, pData, pageWidth = 595, startY = 200) {
         { key: 'PAN :', value: pData['PAN'] },
       ],
       [
-        { key: 'Emp Name :', value: pData['Name'] },
+        { key: 'Emp Name :', value: pData['Emp Name'] },
         { key: 'Designation: ', value: pData['Design.'] },
         { key: 'ESI :', value: pData['ESI'] },
       ],

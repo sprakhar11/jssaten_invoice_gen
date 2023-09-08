@@ -10,7 +10,11 @@ function generateTablemid(doc, pData, pageWidth = 595, startY = 240) {
     const cellHeight = 15;
     const tableX = 50;
     const tableY = startY;
-    
+    const tmp1 = pData['Basic'] + pData['DA'] + pData['Grade Pay'] + pData['HRA'];
+    const tmp2 = pData['Provident Fund'] + pData['TDS'] + pData['Rent'] + pData['LIC'] + 
+                  pData['Electricity'] + pData['Donation'];
+      
+    const tmp3 = tmp1 - tmp2;
     const data = [
       ['Earnings',     '   Amount', 'Deduction', 'Amount'],
       ['   Basic',       '   ' +  pData['Basic'], '   Provident Fund', pData['Provident Fund']],
@@ -19,9 +23,9 @@ function generateTablemid(doc, pData, pageWidth = 595, startY = 240) {
       ['   Grade Pay',    '   ' +  pData['Grade Pay'], '   LIC', pData['LIC']],
       ['','', '   Electricity', pData['Electricity']],
       ['     ', '', '   Donation', pData['Donation']],
-      ['   Total', '   ' + pData['Gross'],'   Total',  pData['Total decuction']],
+      ['   Total', '   ' +tmp1,'   Total',  tmp2],
       [],
-      ['', '', '   Net Salary', pData['Net payable'].substring(1), ],
+      ['', '', '   Net Salary', tmp3],
 
     ];
 

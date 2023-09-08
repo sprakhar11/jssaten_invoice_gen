@@ -103,13 +103,17 @@ function createInvoice(path, pData) {
     // generateTableLast(doc, pData);
 
     drawLine(doc, 50, 450, 545, 450); 
-    let amount = pData['Net payable'].substring(1);
-    const originalString = amount;
-    const charactersToRemove = [',', ' '];
+    // let amount = pData['Net payable'].substring(1);
+    // const originalString = amount;
+    // const charactersToRemove = [',', ' '];
 
-    const filteredArray = Array.from(originalString).filter(char => !charactersToRemove.includes(char));
-    const filteredString = filteredArray.join('');
-    const tmp = parseFloat(filteredString); 
+    // const filteredArray = Array.from(originalString).filter(char => !charactersToRemove.includes(char));
+    // const filteredString = filteredArray.join('');
+    const tmp1 = pData['Basic'] + pData['DA'] + pData['Grade Pay'] + pData['HRA'];
+    const tmp2 = pData['Provident Fund'] + pData['TDS'] + pData['Rent'] + pData['LIC'] + 
+                  pData['Electricity'] + pData['Donation'];
+    // const tmp = parseFloat(filteredString); 
+    const tmp = parseFloat(tmp1 - tmp2);
 
 
     console.log(tmp)

@@ -107,13 +107,13 @@ async function readContentFromFile(filePath) {
 
                 const personObj = { ...person};
                 // console.log(personObj);    
-                var docName = './output/' + year + '/'+ months[month] + '/Generated Invoice/' + personObj['Name'] + '_Invoice.pdf';
+                var docName = './output/' + year + '/'+ months[month] + '/Generated Invoice/' + personObj['Emp Name'] + '_Invoice.pdf';
                 // console.log(docName);
 
                 await createInvoice(docName, personObj);
 
                 if(personObj['Email'] != undefined)
-                    await sendmail(personObj['Email'], docName, personObj['Name']);
+                    await sendmail(personObj['Email'], docName, personObj['Emp Name']);
 
 
                 console.log(personObj['Email'] + '      Email');
